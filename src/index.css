@@ -1,1 +1,250 @@
 @import "tailwindcss";
+
+@theme {
+  --color-pine-950: #071712;
+  --color-pine-900: #0a1f18;
+  --color-pine-850: #0d281e;
+  --color-pine-800: #123528;
+  --color-pine-700: #1a4a37;
+  --color-pine-600: #276348;
+
+  --color-mist-50: #eef6f0;
+  --color-mist-100: #dcebe1;
+  --color-mist-200: #c2d8c9;
+  --color-mist-300: #9fbba9;
+  --color-mist-400: #7e9c89;
+  --color-mist-500: #5f7d6b;
+
+  --color-brass-300: #f3c979;
+  --color-brass-400: #e9b14e;
+  --color-brass-500: #d29a2f;
+
+  --color-mint-300: #7fe6b4;
+  --color-mint-400: #46d695;
+  --color-mint-500: #23b577;
+
+  --color-coral-300: #ff9d87;
+  --color-coral-400: #f4755c;
+  --color-coral-500: #e05a40;
+
+  --font-display: "Unbounded", "Golos Text", system-ui, sans-serif;
+  --font-sans: "Golos Text", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 128px;
+}
+@media (min-width: 768px) {
+  html {
+    scroll-padding-top: 88px;
+  }
+}
+
+body {
+  background-color: var(--color-pine-950);
+  color: var(--color-mist-100);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.015em;
+}
+
+::selection {
+  background: rgba(233, 177, 78, 0.35);
+  color: #eef6f0;
+}
+
+/* лёгкая фактура поверх фона */
+.noise {
+  position: relative;
+}
+.noise::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E");
+}
+.noise > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* миллиметровка — фон для калькулятора */
+.bg-blueprint {
+  background-image:
+    radial-gradient(1100px 620px at 88% -8%, rgba(35, 181, 119, 0.08), transparent 60%),
+    radial-gradient(900px 540px at -8% 16%, rgba(233, 177, 78, 0.07), transparent 55%),
+    linear-gradient(rgba(126, 156, 137, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(126, 156, 137, 0.05) 1px, transparent 1px);
+  background-size: auto, auto, 34px 34px, 34px 34px;
+}
+
+/* слайдеры */
+.slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--track, var(--color-pine-700));
+  outline: none;
+  cursor: pointer;
+}
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--color-brass-400);
+  border: 3px solid #0a1f18;
+  box-shadow: 0 0 0 1px rgba(233, 177, 78, 0.55), 0 2px 10px rgba(0, 0, 0, 0.45);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.slider::-webkit-slider-thumb:hover {
+  transform: scale(1.18);
+  box-shadow: 0 0 0 5px rgba(233, 177, 78, 0.18), 0 2px 12px rgba(0, 0, 0, 0.5);
+}
+.slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--color-brass-400);
+  border: 3px solid #0a1f18;
+  box-shadow: 0 0 0 1px rgba(233, 177, 78, 0.55);
+}
+.slider:focus-visible {
+  box-shadow: 0 0 0 3px rgba(233, 177, 78, 0.25);
+}
+
+.num-input:focus {
+  outline: none;
+}
+
+/* появление при скролле */
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.7s cubic-bezier(0.2, 0.65, 0.3, 1), transform 0.7s cubic-bezier(0.2, 0.65, 0.3, 1);
+}
+.reveal.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+@keyframes riseIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.rise-in {
+  animation: riseIn 0.45s cubic-bezier(0.2, 0.65, 0.3, 1) both;
+}
+
+/* бегущая строка */
+@keyframes tickerMove {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.ticker-track {
+  animation: tickerMove 30s linear infinite;
+}
+.ticker-track:hover {
+  animation-play-state: paused;
+}
+
+/* пульс точки окупаемости */
+@keyframes pulseDot {
+  0% {
+    transform: scale(0.6);
+    opacity: 0.8;
+  }
+  70% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+.pulse-dot {
+  animation: pulseDot 2.2s ease-out infinite;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+/* блик по карточке вердикта */
+@keyframes sheenSweep {
+  0% {
+    transform: translateX(-130%) skewX(-18deg);
+  }
+  55%,
+  100% {
+    transform: translateX(230%) skewX(-18deg);
+  }
+}
+.sheen::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 38%;
+  left: 0;
+  background: linear-gradient(90deg, transparent, rgba(238, 246, 240, 0.06), transparent);
+  animation: sheenSweep 7s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-pine-950);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-pine-700);
+  border-radius: 8px;
+  border: 2px solid var(--color-pine-950);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-pine-600);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .ticker-track,
+  .pulse-dot,
+  .sheen::after {
+    animation: none;
+  }
+}
